@@ -5,732 +5,664 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>三字经识字游戏</title>
     <style>
+        /* ========== 设计系统 ========== */
         :root {
-            --primary: #FF9800;
-            --secondary: #4FC3F7;
-            --accent: #FFEB3B;
-            --bg-start: #E3F2FD;
-            --bg-end: #BBDEFB;
-            --text-dark: #2C3E50;
-            --success: #8BC34A;
-            --error: #F44336;
-            --card-bg: #FFFFFF;
-            --shadow: rgba(0,0,0,0.1);
+            --color-primary: #5B8DEF;
+            --color-primary-light: #7BA4F7;
+            --color-primary-bg: #EEF3FF;
+            --color-accent: #FFD166;
+            --color-success: #06D6A0;
+            --color-error: #EF476F;
+            --color-text: #2D3748;
+            --color-text-secondary: #718096;
+            --color-text-light: #A0AEC0;
+            --color-bg: #F7F8FC;
+            --color-card: #FFFFFF;
+            --color-border: #E2E8F0;
+            --color-option-hover: #F0F4FF;
+            --color-option-e: #F7FAFC;
+            --color-option-e-border: #CBD5E0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.08);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --font-main: -apple-system, 'PingFang SC', 'Helvetica Neue', 'Microsoft YaHei', sans-serif;
+            --content-width: 960px;
         }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            font-family: var(--font-main);
+            background: var(--color-bg);
+            color: var(--color-text);
             min-height: 100vh;
-            color: var(--text-dark);
-            overflow-x: hidden;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 15px;
-            height: 100vh;
             display: flex;
-            flex-direction: column;
-            position: relative;
+            justify-content: center;
+            align-items: flex-start;
+            -webkit-font-smoothing: antialiased;
         }
-        
-        /* 吉祥物 */
-        .mascot {
-            position: fixed;
-            right: 30px;
-            top: 30px;
-            font-size: 4em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 1000;
-            animation: mascotFloat 2s ease-in-out infinite;
+
+        /* ========== 主容器 ========== */
+        .app {
+            width: 100%;
+            max-width: var(--content-width);
+            min-height: 100vh;
+            padding: 32px 40px;
         }
-        
-        .mascot:hover {
-            transform: scale(1.1);
-        }
-        
-        .mascot.happy {
-            animation: mascotHappy 0.5s ease;
-        }
-        
-        .mascot.sad {
-            animation: mascotSad 0.5s ease;
-        }
-        
-        @keyframes mascotFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        @keyframes mascotHappy {
-            0% { transform: scale(1) rotate(0); }
-            25% { transform: scale(1.2) rotate(-10deg); }
-            50% { transform: scale(1.2) rotate(10deg); }
-            75% { transform: scale(1.2) rotate(-5deg); }
-            100% { transform: scale(1) rotate(0); }
-        }
-        
-        @keyframes mascotSad {
-            0% { transform: translateY(0); }
-            25% { transform: translateY(5px); }
-            50% { transform: translateY(0); }
-            75% { transform: translateY(3px); }
-            100% { transform: translateY(0); }
-        }
-        
-        .mascot-speech {
-            position: fixed;
-            right: 100px;
-            top: 20px;
-            background: white;
-            padding: 10px 15px;
-            border-radius: 15px;
-            box-shadow: 0 2px 10px var(--shadow);
-            font-size: 0.9em;
-            max-width: 200px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            z-index: 1000;
-        }
-        
-        .mascot-speech.show {
-            opacity: 1;
-        }
-        
-        .mascot-speech::after {
-            content: '';
-            position: absolute;
-            right: -10px;
-            top: 50%;
-            transform: translateY(-50%);
-            border: 10px solid transparent;
-            border-left-color: white;
-        }
-        
-        /* 头部样式 */
-        .header {
+
+        /* ========== 导航页 ========== */
+        .nav-page { display: block; }
+
+        .nav-header {
             text-align: center;
-            padding: 10px 0;
-            flex-shrink: 0;
+            margin-bottom: 48px;
         }
-        
-        .game-title {
-            font-size: 2em;
-            color: var(--primary);
-            margin-bottom: 5px;
-            text-shadow: 1px 1px 2px var(--shadow);
+
+        .nav-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--color-text);
+            letter-spacing: 1px;
+            margin-bottom: 12px;
         }
-        
-        .progress-info {
-            background: var(--card-bg);
-            border-radius: 20px;
+
+        .nav-progress {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--color-card);
             padding: 8px 20px;
-            display: inline-block;
-            font-size: 1.1em;
-            color: var(--text-dark);
-            box-shadow: 0 2px 10px var(--shadow);
+            border-radius: 100px;
+            font-size: 14px;
+            color: var(--color-text-secondary);
+            box-shadow: var(--shadow-sm);
         }
-        
-        /* 导航页 */
-        .nav-page {
-            display: block;
-            flex: 1;
-            overflow-y: auto;
+
+        .nav-progress strong {
+            color: var(--color-primary);
+            font-weight: 600;
         }
-        
+
+        /* 关卡网格 */
         .levels-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 15px;
-            padding: 20px 0;
-            max-width: 1200px;
-            margin: 0 auto;
+            gap: 16px;
+            margin-bottom: 40px;
         }
-        
+
         .level-card {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 20px 10px;
+            background: var(--color-card);
+            border-radius: var(--radius-lg);
+            padding: 28px 12px 20px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 3px 10px var(--shadow);
+            transition: all 0.25s ease;
+            box-shadow: var(--shadow-sm);
+            border: 2px solid transparent;
             position: relative;
-            aspect-ratio: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border: 3px solid transparent;
         }
-        
+
         .level-card:hover:not(.locked) {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 8px 20px var(--shadow);
-            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
         }
-        
+
         .level-card.locked {
-            background: #F5F5F5;
+            opacity: 0.45;
             cursor: not-allowed;
-            opacity: 0.6;
         }
-        
-        .level-card.passed {
-            background: linear-gradient(135deg, var(--success), #C8E6C9);
-            color: white;
-            animation: passedGlow 2s ease-in-out infinite;
+
+        .level-card.locked:hover {
+            transform: none;
         }
-        
+
+        .level-card.unlocked {
+            border-color: var(--color-border);
+        }
+
+        .level-card.unlocked:hover {
+            border-color: var(--color-primary-light);
+        }
+
         .level-card.current {
-            border-color: var(--primary);
-            animation: currentPulse 1.5s ease-in-out infinite;
+            border-color: var(--color-primary);
+            background: var(--color-primary-bg);
         }
-        
-        @keyframes passedGlow {
-            0%, 100% { box-shadow: 0 0 5px var(--success); }
-            50% { box-shadow: 0 0 20px var(--success), 0 0 30px var(--success); }
+
+        .level-card.passed {
+            border-color: var(--color-success);
+            background: #F0FFF8;
         }
-        
-        @keyframes currentPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+
+        .level-num {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--color-primary);
+            line-height: 1;
+            margin-bottom: 8px;
         }
-        
-        .level-number {
-            font-size: 2em;
-            font-weight: bold;
-            margin-bottom: 5px;
+
+        .level-card.locked .level-num {
+            color: var(--color-text-light);
         }
-        
-        .level-status {
-            font-size: 1.5em;
+
+        .level-card.passed .level-num {
+            color: var(--color-success);
         }
-        
-        .level-stars {
-            font-size: 0.9em;
-            margin-top: 5px;
+
+        .level-name {
+            font-size: 13px;
+            color: var(--color-text-secondary);
+            margin-bottom: 8px;
         }
-        
-        /* 连对显示 */
-        .streak-display {
-            position: fixed;
-            left: 30px;
-            top: 30px;
-            background: linear-gradient(135deg, #FF5722, #FF9800);
+
+        .level-card.locked .level-name {
+            color: var(--color-text-light);
+        }
+
+        .level-check {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 22px;
+            height: 22px;
+            background: var(--color-success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: white;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-size: 1.2em;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(255,87,34,0.4);
-            opacity: 0;
-            transform: scale(0);
-            transition: all 0.3s ease;
-            z-index: 1000;
+            font-size: 12px;
         }
-        
-        .streak-display.show {
-            opacity: 1;
-            transform: scale(1);
-            animation: streakBounce 0.5s ease;
+
+        .level-lock {
+            font-size: 13px;
+            color: var(--color-text-light);
+            margin-top: 4px;
         }
-        
-        @keyframes streakBounce {
-            0% { transform: scale(0); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
+
+        .level-char-count {
+            font-size: 11px;
+            color: var(--color-text-light);
+            margin-top: 6px;
         }
-        
-        /* 测试页 */
+
+        .nav-footer {
+            text-align: center;
+        }
+
+        .btn-reset {
+            background: none;
+            border: 1px solid var(--color-border);
+            border-radius: 100px;
+            padding: 8px 24px;
+            font-size: 13px;
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font-main);
+        }
+
+        .btn-reset:hover {
+            border-color: var(--color-error);
+            color: var(--color-error);
+        }
+
+        /* ========== 测试页 ========== */
         .test-page {
             display: none;
-            flex: 1;
             flex-direction: column;
-            overflow: hidden;
+            height: 100vh;
+            padding: 24px 40px;
+            max-width: var(--content-width);
+            margin: 0 auto;
         }
-        
-        .test-header {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 12px 20px;
+
+        .test-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            box-shadow: 0 2px 8px var(--shadow);
+            margin-bottom: 16px;
             flex-shrink: 0;
         }
-        
-        .test-info {
+
+        .test-level {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--color-text-secondary);
+        }
+
+        .test-level span {
+            color: var(--color-primary);
+        }
+
+        .test-timer {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .test-progress {
+            font-size: 14px;
+            color: var(--color-text-light);
+        }
+
+        .btn-exit {
+            background: none;
+            border: 1px solid var(--color-border);
+            border-radius: 100px;
+            padding: 6px 16px;
+            font-size: 13px;
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font-main);
+        }
+
+        .btn-exit:hover {
+            border-color: var(--color-text-secondary);
+        }
+
+        /* 汉字显示 */
+        .char-section {
+            flex: 1;
             display: flex;
-            gap: 20px;
-            font-size: 1.1em;
+            flex-direction: column;
             align-items: center;
-        }
-        
-        .char-display {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 25px 20px;
-            text-align: center;
-            margin: 10px 0;
-            box-shadow: 0 4px 15px var(--shadow);
-            flex-shrink: 0;
-            position: relative;
-        }
-        
-        .current-char {
-            font-size: 5rem;
-            font-weight: bold;
-            color: var(--text-dark);
-            line-height: 1;
-            transition: all 0.3s ease;
-        }
-        
-        .current-char.pop {
-            animation: charPop 0.4s ease;
-        }
-        
-        @keyframes charPop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.3); }
-            100% { transform: scale(1); }
-        }
-        
-        .question-timer {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 10px 20px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 8px var(--shadow);
-            flex-shrink: 0;
-        }
-        
-        .timer-bar {
-            background: #E0E0E0;
-            border-radius: 10px;
-            height: 18px;
-            overflow: hidden;
-            margin-top: 8px;
-            position: relative;
-        }
-        
-        .timer-bar-fill {
-            background: linear-gradient(90deg, var(--success), var(--secondary));
-            height: 100%;
-            transition: width 1s linear;
-            border-radius: 10px;
-        }
-        
-        .timer-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-weight: bold;
-            color: var(--text-dark);
-            font-size: 0.9em;
-        }
-        
-        /* 选项布局 */
-        .options-container {
-            display: flex;
-            gap: 10px;
             justify-content: center;
-            flex-wrap: wrap;
-            margin: 10px 0;
-            flex-shrink: 0;
+            min-height: 0;
         }
-        
+
+        .char-display {
+            background: var(--color-card);
+            border-radius: var(--radius-xl);
+            width: 100%;
+            max-width: 360px;
+            aspect-ratio: 4/3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .char-display .char {
+            font-size: 120px;
+            font-weight: 700;
+            color: var(--color-text);
+            line-height: 1;
+        }
+
+        /* 倒计时 */
+        .timer-section {
+            width: 100%;
+            max-width: 360px;
+            margin-bottom: 20px;
+        }
+
+        .timer-bar-bg {
+            width: 100%;
+            height: 6px;
+            background: var(--color-border);
+            border-radius: 100px;
+            overflow: hidden;
+        }
+
+        .timer-bar-fill {
+            height: 100%;
+            background: var(--color-primary);
+            border-radius: 100px;
+            transition: width 1s linear;
+        }
+
+        .timer-bar-fill.warning {
+            background: var(--color-accent);
+        }
+
+        .timer-bar-fill.danger {
+            background: var(--color-error);
+        }
+
+        /* 选项区 */
+        .options-section {
+            width: 100%;
+            margin-bottom: 16px;
+        }
+
+        .options-row {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .options-row:last-child {
+            margin-bottom: 0;
+        }
+
         .option-btn {
-            background: linear-gradient(135deg, var(--accent), #FFF176);
-            border: none;
-            border-radius: 12px;
-            padding: 12px 8px;
-            font-size: 1.2em;
+            background: var(--color-card);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: 0 24px;
+            height: 64px;
+            min-width: 148px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 3px 8px var(--shadow);
-            text-align: center;
-            min-width: 90px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
+            font-family: var(--font-main);
+            font-size: 18px;
+            color: var(--color-text);
         }
-        
+
         .option-btn:hover:not(.disabled) {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 5px 15px var(--shadow);
+            border-color: var(--color-primary-light);
+            background: var(--color-option-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
-        
+
         .option-btn:active:not(.disabled) {
-            transform: translateY(-1px) scale(0.98);
+            transform: translateY(0);
         }
-        
+
+        .option-btn .label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-text-light);
+            min-width: 16px;
+        }
+
+        .option-btn .text {
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        /* E选项差异化 */
+        .option-btn.opt-e {
+            border-style: dashed;
+            border-color: var(--color-option-e-border);
+            background: var(--color-option-e);
+            color: var(--color-text-secondary);
+            font-size: 15px;
+            min-width: 148px;
+            justify-content: center;
+        }
+
+        .option-btn.opt-e:hover:not(.disabled) {
+            border-color: var(--color-text-secondary);
+            background: #EDF2F7;
+        }
+
+        /* 选项状态 */
         .option-btn.correct {
-            background: linear-gradient(135deg, var(--success), #AED581);
-            color: white;
-            animation: correctBounce 0.5s ease;
+            border-color: var(--color-success);
+            background: #F0FFF8;
+            color: var(--color-success);
         }
-        
+
         .option-btn.wrong {
-            background: linear-gradient(135deg, var(--error), #EF5350);
-            color: white;
-            animation: wrongShake 0.5s ease;
+            border-color: var(--color-error);
+            background: #FFF5F7;
+            color: var(--color-error);
         }
-        
+
         .option-btn.disabled {
             pointer-events: none;
-            opacity: 0.8;
-        }
-        
-        @keyframes correctBounce {
-            0%, 100% { transform: scale(1); }
-            25% { transform: scale(1.2); }
-            50% { transform: scale(1.1); }
-            75% { transform: scale(1.15); }
-        }
-        
-        @keyframes wrongShake {
-            0%, 100% { transform: translateX(0); }
-            20% { transform: translateX(-10px); }
-            40% { transform: translateX(10px); }
-            60% { transform: translateX(-5px); }
-            80% { transform: translateX(5px); }
-        }
-        
-        .option-label {
-            position: absolute;
-            top: 2px;
-            left: 4px;
-            font-size: 0.5em;
             opacity: 0.7;
         }
-        
-        .option-e {
-            min-width: 120px;
-        }
-        
-        /* 星星特效 */
-        .star {
-            position: fixed;
-            font-size: 2em;
-            pointer-events: none;
-            animation: starFly 1s ease-out forwards;
-            z-index: 2000;
-        }
-        
-        @keyframes starFly {
-            0% {
-                opacity: 1;
-                transform: translate(0, 0) scale(1) rotate(0);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(var(--tx), var(--ty)) scale(0) rotate(720deg);
-            }
-        }
-        
-        /* 统计区域 */
-        .stats-area {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 10px 15px;
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 15px;
-            box-shadow: 0 2px 8px var(--shadow);
+
+        /* 反馈 */
+        .feedback {
+            text-align: center;
+            font-size: 15px;
+            font-weight: 500;
+            height: 28px;
+            line-height: 28px;
+            margin-bottom: 12px;
             flex-shrink: 0;
         }
-        
-        .stat-item {
-            text-align: center;
+
+        .feedback.correct {
+            color: var(--color-success);
         }
-        
-        .stat-value {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: var(--primary);
+
+        .feedback.wrong {
+            color: var(--color-error);
         }
-        
-        .stat-label {
-            font-size: 0.9em;
-            color: var(--text-dark);
-            opacity: 0.8;
-        }
-        
-        /* 反馈区域 */
-        .feedback-area {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 10px 15px;
-            margin: 10px 0;
-            text-align: center;
-            font-size: 1.2em;
-            min-height: 45px;
+
+        /* 统计 */
+        .stats-bar {
             display: flex;
-            align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 8px var(--shadow);
+            gap: 40px;
+            padding: 12px 0;
             flex-shrink: 0;
         }
-        
-        /* 结果页 */
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--color-text-light);
+            margin-top: 2px;
+        }
+
+        .stat-value.success { color: var(--color-success); }
+        .stat-value.error { color: var(--color-error); }
+
+        /* ========== 结果页 ========== */
         .result-page {
             display: none;
             text-align: center;
-            flex: 1;
-            overflow-y: auto;
+            padding-top: 60px;
         }
-        
-        .result-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 30px;
-            margin: 20px auto;
-            max-width: 500px;
-            box-shadow: 0 4px 15px var(--shadow);
-        }
-        
+
         .result-icon {
-            font-size: 4em;
-            margin-bottom: 15px;
+            font-size: 56px;
+            margin-bottom: 16px;
         }
-        
+
         .result-title {
-            font-size: 2em;
-            margin-bottom: 20px;
-            color: var(--text-dark);
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-bottom: 32px;
         }
-        
+
         .result-stats {
             display: flex;
-            justify-content: space-around;
-            margin: 25px 0;
-            flex-wrap: wrap;
-            gap: 20px;
+            justify-content: center;
+            gap: 48px;
+            margin-bottom: 36px;
         }
-        
-        .result-stat {
-            text-align: center;
-        }
-        
+
         .result-stat-value {
-            font-size: 2.5em;
-            font-weight: bold;
-            color: var(--primary);
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--color-primary);
         }
-        
+
         .result-stat-label {
-            font-size: 1em;
-            color: var(--text-dark);
-            opacity: 0.8;
+            font-size: 13px;
+            color: var(--color-text-secondary);
+            margin-top: 4px;
         }
-        
-        .wrong-words {
-            background: #F5F5F5;
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
+
+        .wrong-section {
+            background: var(--color-card);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin: 0 auto 32px;
+            max-width: 500px;
             text-align: left;
+            box-shadow: var(--shadow-sm);
         }
-        
-        .wrong-word-item {
+
+        .wrong-section h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .wrong-item {
             display: inline-block;
-            background: var(--card-bg);
-            border-radius: 10px;
-            padding: 8px 12px;
-            margin: 5px;
-            box-shadow: 0 1px 5px var(--shadow);
-            font-size: 1.1em;
+            padding: 6px 14px;
+            margin: 4px;
+            background: var(--color-bg);
+            border-radius: var(--radius-sm);
+            font-size: 15px;
         }
-        
-        /* 按钮样式 */
-        .btn {
-            background: linear-gradient(135deg, var(--primary), #FFB74D);
-            color: white;
+
+        .wrong-item .pinyin {
+            color: var(--color-primary);
+            margin-left: 4px;
+            font-size: 13px;
+        }
+
+        .result-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
             border: none;
-            border-radius: 25px;
-            padding: 12px 30px;
-            font-size: 1.1em;
+            border-radius: 100px;
+            padding: 12px 36px;
+            font-size: 15px;
+            font-weight: 600;
+            color: white;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 10px;
-            box-shadow: 0 4px 12px rgba(255,152,0,0.3);
+            transition: all 0.2s;
+            font-family: var(--font-main);
         }
-        
-        .btn:hover {
+
+        .btn-primary:hover {
+            background: var(--color-primary-light);
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(255,152,0,0.4);
+            box-shadow: 0 4px 16px rgba(91,141,239,0.3);
         }
-        
-        .btn-small {
-            padding: 8px 20px;
-            font-size: 1em;
+
+        .btn-secondary {
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: 100px;
+            padding: 12px 36px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font-main);
         }
-        
-        .hidden {
-            display: none !important;
+
+        .btn-secondary:hover {
+            border-color: var(--color-text-secondary);
         }
-        
-        /* 响应式调整 */
-        @media (max-width: 1200px) {
-            .levels-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-            .mascot {
-                font-size: 3em;
-                right: 20px;
-                top: 20px;
-            }
-        }
-        
-        @media (max-width: 900px) {
-            .levels-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            .option-btn {
-                min-width: 80px;
-                font-size: 1em;
-                height: 45px;
-            }
-            .current-char {
-                font-size: 4rem;
-            }
-            .streak-display {
-                left: 20px;
-                top: 20px;
-                font-size: 1em;
-                padding: 8px 15px;
-            }
-        }
-        
-        @media (max-width: 600px) {
-            .levels-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .container {
-                padding: 10px;
-            }
-            .mascot {
-                font-size: 2.5em;
-            }
-        }
+
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
-    <!-- 吉祥物 -->
-    <div class="mascot" id="mascot" onclick="mascotSpeak()">🐰</div>
-    <div class="mascot-speech" id="mascotSpeech">加油！你可以的！</div>
-    
-    <!-- 连对显示 -->
-    <div class="streak-display" id="streakDisplay">🔥 连对 3 题！</div>
-    
-    <div class="container">
+    <div class="app">
         <!-- 导航页 -->
         <div id="navPage" class="nav-page">
-            <div class="header">
-                <h1 class="game-title">🎮 三字经识字游戏</h1>
-                <div class="progress-info">
-                    🌟 已通过 <span id="passedCount">0</span> / 10 关 🌟
+            <div class="nav-header">
+                <h1 class="nav-title">三字经识字游戏</h1>
+                <div class="nav-progress">
+                    已完成 <strong id="passedCount">0</strong> / 10 关
                 </div>
             </div>
-            
-            <div class="levels-grid" id="levelsGrid">
-                <!-- 关卡卡片将由JavaScript生成 -->
-            </div>
-            
-            <div style="text-align: center; margin-top: 20px;">
-                <button class="btn btn-small" onclick="resetProgress()">🔄 重新开始</button>
+            <div class="levels-grid" id="levelsGrid"></div>
+            <div class="nav-footer">
+                <button class="btn-reset" onclick="resetProgress()">重新开始</button>
             </div>
         </div>
-        
+
         <!-- 测试页 -->
         <div id="testPage" class="test-page">
-            <div class="test-header">
-                <div class="test-info">
-                    <div>📍 第 <span id="currentLevel">1</span> 关</div>
-                    <div>⏱️ <span id="totalTimer">00:00</span></div>
-                    <div>📝 <span id="currentQuestion">1</span>/<span id="totalQuestions">50</span></div>
-                </div>
-                <button class="btn btn-small" onclick="exitTest()">退出</button>
+            <div class="test-top">
+                <div class="test-level">第 <span id="currentLevel">1</span> 关</div>
+                <div class="test-progress" id="currentQuestion">1 / 50</div>
+                <div class="test-timer" id="totalTimer">00:00</div>
+                <button class="btn-exit" onclick="exitTest()">退出</button>
             </div>
-            
-            <div class="char-display">
-                <div class="current-char" id="currentChar">人</div>
-            </div>
-            
-            <div class="question-timer">
-                <div>⏰ <span id="questionTimer">15</span> 秒</div>
-                <div class="timer-bar">
-                    <div class="timer-bar-fill" id="timerBarFill" style="width: 100%"></div>
-                    <div class="timer-text" id="timerText">15</div>
+
+            <div class="char-section">
+                <div class="char-display">
+                    <span class="char" id="currentChar">人</span>
+                </div>
+
+                <div class="timer-section">
+                    <div class="timer-bar-bg">
+                        <div class="timer-bar-fill" id="timerBarFill" style="width:100%"></div>
+                    </div>
+                </div>
+
+                <div class="feedback" id="feedback"></div>
+
+                <div class="options-section">
+                    <div class="options-row" id="optionsRow1"></div>
+                    <div class="options-row" id="optionsRow2"></div>
                 </div>
             </div>
-            
-            <div class="feedback-area" id="feedbackArea"></div>
-            
-            <div class="options-container" id="optionsContainer"></div>
-            
-            <div class="stats-area">
-                <div class="stat-item">
-                    <div class="stat-value" id="correctCount">0</div>
-                    <div class="stat-label">✅</div>
+
+            <div class="stats-bar">
+                <div class="stat">
+                    <div class="stat-value success" id="correctCount">0</div>
+                    <div class="stat-label">正确</div>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="wrongCount">0</div>
-                    <div class="stat-label">❌</div>
+                <div class="stat">
+                    <div class="stat-value error" id="wrongCount">0</div>
+                    <div class="stat-label">错误</div>
                 </div>
             </div>
         </div>
-        
+
         <!-- 结果页 -->
         <div id="resultPage" class="result-page">
-            <div class="header">
-                <h1 class="game-title">🎯 结果</h1>
+            <div class="result-icon" id="resultIcon">🎉</div>
+            <div class="result-title" id="resultTitle">恭喜过关！</div>
+            <div class="result-stats">
+                <div>
+                    <div class="result-stat-value" id="resultCorrect">0</div>
+                    <div class="result-stat-label">正确</div>
+                </div>
+                <div>
+                    <div class="result-stat-value" id="resultWrong">0</div>
+                    <div class="result-stat-label">错误</div>
+                </div>
+                <div>
+                    <div class="result-stat-value" id="resultTime">00:00</div>
+                    <div class="result-stat-label">用时</div>
+                </div>
             </div>
-            <div class="result-card">
-                <div class="result-icon" id="resultIcon">🎉</div>
-                <div class="result-title" id="resultTitle">恭喜过关！</div>
-                
-                <div class="result-stats">
-                    <div class="result-stat">
-                        <div class="result-stat-value" id="resultCorrect">0</div>
-                        <div class="result-stat-label">正确</div>
-                    </div>
-                    <div class="result-stat">
-                        <div class="result-stat-value" id="resultWrong">0</div>
-                        <div class="result-stat-label">错误</div>
-                    </div>
-                    <div class="result-stat">
-                        <div class="result-stat-value" id="resultTime">00:00</div>
-                        <div class="result-stat-label">用时</div>
-                    </div>
-                </div>
-                
-                <div id="wrongWordsArea" class="wrong-words hidden">
-                    <h3>📝 错题回顾</h3>
-                    <div id="wrongWordsList"></div>
-                </div>
-                
-                <div style="margin-top: 25px;">
-                    <button class="btn" id="nextLevelBtn" onclick="goToNextLevel()">下一关</button>
-                    <button class="btn btn-small" onclick="goToNav()">返回首页</button>
-                </div>
+            <div id="wrongWordsArea" class="wrong-section hidden">
+                <h3>错题回顾</h3>
+                <div id="wrongWordsList"></div>
+            </div>
+            <div class="result-buttons">
+                <button class="btn-primary" id="nextLevelBtn" onclick="goToNextLevel()">下一关</button>
+                <button class="btn-secondary" onclick="goToNav()">返回首页</button>
             </div>
         </div>
     </div>
@@ -739,492 +671,269 @@
         const sanzijingText = `人之初 性本善 性相近 习相远 苟不教 性乃迁 教之道 贵以专 昔孟母 择邻处 子不学 断机杼 窦燕山 有义方 教五子 名俱扬 养不教 父之过 教不严 师之惰 子不学 非所宜 幼不学 老何为 玉不琢 不成器 人不学 不知义 为人子 方少时 亲师友 习礼仪 香九龄 能温席 孝于亲 所当执 融四岁 能让梨 弟于长 宜先知 首孝悌 次见闻 知某数 识某文 一而十 十而百 百而千 千而万 三才者 天地人 三光者 日月星 三纲者 君臣义 父子亲 夫妇顺 曰春夏 曰秋冬 此四时 运不穷 曰南北 曰西东 此四方 应乎中 曰水火 木金土 此五行 本乎数 曰仁义 礼智信 此五常 不容紊 稻粱菽 麦黍稷 此六谷 人所食 马牛羊 鸡犬豕 此六畜 人所饲 曰喜怒 曰哀惧 爱恶欲 七情具 匏土革 木石金 丝与竹 乃八音 高曾祖 父而身 身而子 子而孙 自子孙 至玄曾 乃九族 人之伦 父子恩 夫妇从 兄则友 弟则恭 长幼序 友与朋 君则敬 臣则忠 此十义 人所同 凡训蒙 须讲究 详训诂 明句读 为学者 必有初 小学终 至四书 论语者 二十篇 群弟子 记善言 孟子者 七篇止 讲道德 说仁义 作中庸 子思笔 中不偏 庸不易 作大学 乃曾子 自修齐 至平治 孝经通 四书熟 如六经 始可读 诗书易 礼春秋 号六经 当讲求 有连山 有归藏 有周易 三易详 有典谟 有训诰 有誓命 书之奥 我周公 作周礼 著六官 存治体 大小戴 注礼记 述圣言 礼乐备 曰国风 曰雅颂 号四诗 当讽咏 诗既亡 春秋作 寓褒贬 别善恶 三传者 有公羊 有左氏 有榖梁 经既明 方读子 撮其要 记其事 五子者 有荀扬 文中子 及老庄 经子通 读诸史 考世系 知终始 自羲农 至黄帝 号三皇 居上世 唐有虞 号二帝 相揖逊 称盛世 夏有禹 商有汤 周文武 称三王 夏传子 家天下 四百载 迁夏社 汤伐夏 国号商 六百载 至纣亡 周武王 始诛纣 八百载 最长久 周辙东 王纲坠 逞干戈 尚游说 始春秋 终战国 五霸强 七雄出 嬴秦氏 始兼并 传二世 楚汉争 高祖兴 汉业建 至孝平 王莽篡 光武兴 为东汉 四百年 终于献 魏蜀吴 争汉鼎 号三国 迄两晋 宋齐继 梁陈承 为南朝 都金陵 北元魏 分东西 宇文周 与高齐 迨至隋 一土宇 不再传 失统绪 唐高祖 起义师 除隋乱 创国基 二十传 三百载 梁灭之 国乃改 梁唐晋 及汉周 称五代 皆有由 炎宋兴 受周禅 十八传 南北混 辽与金 帝号纷 迨灭辽 宋犹存 至元兴 金绪歇 有宋世 一同灭 并中国 兼戎狄 九十年 国祚废 明太祖 久亲师 传建文 方四祀 迁北京 永乐嗣 迨崇祯 煤山逝 清太祖 膺景命 靖四方 克大定 至世祖 乃大同 十二世 清祚终 读史者 考实录 通古今 若亲目 口而诵 心而惟 朝于斯 夕于斯 昔仲尼 师项橐 古圣贤 尚勤学 赵中令 读鲁论 彼既仕 学且勤 披蒲编 削竹简 彼无书 且知勉 头悬梁 锥刺股 彼不教 自勤苦 如囊萤 如映雪 家虽贫 学不辍 如负薪 如挂角 身虽劳 犹苦卓 苏老泉 二十七 始发愤 读书籍 彼既老 犹悔迟 尔小生 宜早思 若梁灏 八十二 对大廷 魁多士 彼既成 众称异 尔小生 宜立志 莹八岁 能咏诗 泌七岁 能赋棋 彼颖悟 人称奇 尔幼学 当效之 蔡文姬 能辨琴 谢道韫 能咏吟 彼女子 且聪敏 尔男子 当自警 唐刘晏 方七岁 举神童 作正字 彼虽幼 身已仕 尔幼学 勉而致 有为者 亦若是 犬守夜 鸡司晨 苟不学 曷为人 蚕吐丝 蜂酿蜜 人不学 不如物 幼而学 壮而行 上致君 下泽民 扬名声 显父母 光于前 裕于后 人遗子 金满赢 我教子 惟一经 勤有功 戏无益 戒之哉 宜勉力`;
 
         const pinyinData = {
-            '人': 'rén', '之': 'zhī', '初': 'chū', '性': 'xìng', '本': 'běn', '善': 'shàn', '相': 'xiāng', '近': 'jìn', '习': 'xí', '远': 'yuǎn',
-            '苟': 'gǒu', '不': 'bù', '教': 'jiào', '乃': 'nǎi', '迁': 'qiān', '道': 'dào', '贵': 'guì', '以': 'yǐ', '专': 'zhuān', '昔': 'xī',
-            '孟': 'mèng', '母': 'mǔ', '择': 'zé', '邻': 'lín', '处': 'chǔ', '子': 'zǐ', '学': 'xué', '断': 'duàn', '机': 'jī', '杼': 'zhù',
-            '窦': 'dòu', '燕': 'yān', '山': 'shān', '有': 'yǒu', '义': 'yì', '方': 'fāng', '五': 'wǔ', '名': 'míng', '俱': 'jù', '扬': 'yáng',
-            '养': 'yǎng', '父': 'fù', '过': 'guò', '严': 'yán', '师': 'shī', '惰': 'duò', '非': 'fēi', '所': 'suǒ', '宜': 'yí', '幼': 'yòu',
-            '老': 'lǎo', '何': 'hé', '为': 'wéi', '玉': 'yù', '琢': 'zhuó', '成': 'chéng', '器': 'qì', '知': 'zhī', '作': 'zuò', '少': 'shào',
-            '时': 'shí', '亲': 'qīn', '友': 'yǒu', '礼': 'lǐ', '仪': 'yí', '香': 'xiāng', '九': 'jiǔ', '龄': 'líng', '能': 'néng', '温': 'wēn',
-            '席': 'xí', '孝': 'xiào', '于': 'yú', '当': 'dāng', '执': 'zhí', '融': 'róng', '四': 'sì', '岁': 'suì', '让': 'ràng', '梨': 'lí',
-            '弟': 'dì', '长': 'zhǎng', '先': 'xiān', '首': 'shǒu', '悌': 'tì', '次': 'cì', '见': 'jiàn', '闻': 'wén', '某': 'mǒu', '数': 'shù',
-            '识': 'shí', '文': 'wén', '一': 'yī', '而': 'ér', '十': 'shí', '百': 'bǎi', '千': 'qiān', '万': 'wàn', '三': 'sān', '才': 'cái',
-            '者': 'zhě', '天': 'tiān', '地': 'dì', '光': 'guāng', '日': 'rì', '月': 'yuè', '星': 'xīng', '纲': 'gāng', '君': 'jūn', '臣': 'chén',
-            '夫': 'fū', '妇': 'fù', '顺': 'shùn', '曰': 'yuē', '春': 'chūn', '夏': 'xià', '秋': 'qiū', '冬': 'dōng', '此': 'cǐ', '四': 'sì',
-            '运': 'yùn', '穷': 'qióng', '南': 'nán', '北': 'běi', '西': 'xī', '东': 'dōng', '应': 'yìng', '乎': 'hū', '中': 'zhōng', '水': 'shuǐ',
-            '火': 'huǒ', '木': 'mù', '金': 'jīn', '土': 'tǔ', '行': 'xíng', '仁': 'rén', '智': 'zhì', '信': 'xìn', '常': 'cháng', '容': 'róng',
-            '紊': 'wěn', '稻': 'dào', '粱': 'liáng', '菽': 'shū', '麦': 'mài', '黍': 'shǔ', '稷': 'jì', '六': 'liù', '谷': 'gǔ', '食': 'shí',
-            '马': 'mǎ', '牛': 'niú', '羊': 'yáng', '鸡': 'jī', '犬': 'quǎn', '豕': 'shǐ', '畜': 'chù', '饲': 'sì', '喜': 'xǐ', '怒': 'nù',
-            '哀': 'āi', '惧': 'jù', '爱': 'ài', '恶': 'wù', '欲': 'yù', '七': 'qī', '情': 'qíng', '具': 'jù', '匏': 'páo', '革': 'gé',
-            '石': 'shí', '丝': 'sī', '与': 'yǔ', '竹': 'zhú', '八': 'bā', '音': 'yīn', '高': 'gāo', '曾': 'zēng', '祖': 'zǔ', '身': 'shēn',
-            '自': 'zì', '孙': 'sūn', '至': 'zhì', '玄': 'xuán', '族': 'zú', '伦': 'lún', '恩': 'ēn', '从': 'cóng', '兄': 'xiōng', '则': 'zé',
-            '恭': 'gōng', '序': 'xù', '朋': 'péng', '敬': 'jìng', '忠': 'zhōng', '凡': 'fán', '训': 'xùn', '蒙': 'méng', '须': 'xū', '讲': 'jiǎng',
-            '究': 'jiū', '详': 'xiáng', '诂': 'gǔ', '明': 'míng', '句': 'jù', '读': 'dú', '必': 'bì', '初': 'chū', '小': 'xiǎo', '终': 'zhōng',
-            '书': 'shū', '论': 'lún', '语': 'yǔ', '篇': 'piān', '群': 'qún', '记': 'jì', '善': 'shàn', '言': 'yán', '止': 'zhǐ', '德': 'dé',
-            '说': 'shuō', '庸': 'yōng', '思': 'sī', '笔': 'bǐ', '偏': 'piān', '易': 'yì', '大': 'dà', '修': 'xiū', '齐': 'qí', '平': 'píng',
-            '治': 'zhì', '经': 'jīng', '通': 'tōng', '熟': 'shú', '如': 'rú', '始': 'shǐ', '可': 'kě', '诗': 'shī', '礼': 'lǐ', '号': 'hào',
-            '求': 'qiú', '连': 'lián', '山': 'shān', '归': 'guī', '藏': 'cáng', '周': 'zhōu', '详': 'xiáng', '典': 'diǎn', '谟': 'mó', '诰': 'gào',
-            '誓': 'shì', '命': 'mìng', '奥': 'ào', '我': 'wǒ', '公': 'gōng', '著': 'zhù', '官': 'guān', '存': 'cún', '体': 'tǐ', '戴': 'dài',
-            '注': 'zhù', '述': 'shù', '圣': 'shèng', '乐': 'yuè', '备': 'bèi', '国': 'guó', '风': 'fēng', '雅': 'yǎ', '颂': 'sòng', '讽': 'fěng',
-            '咏': 'yǒng', '既': 'jì', '亡': 'wáng', '寓': 'yù', '褒': 'bāo', '贬': 'biǎn', '别': 'bié', '传': 'zhuàn', '左': 'zuǒ', '氏': 'shì',
-            '榖': 'gǔ', '梁': 'liáng', '方': 'fāng', '撮': 'cuō', '要': 'yào', '事': 'shì', '荀': 'xún', '及': 'jí', '庄': 'zhuāng', '诸': 'zhū',
-            '史': 'shǐ', '考': 'kǎo', '世': 'shì', '系': 'xì', '羲': 'xī', '农': 'nóng', '黄': 'huáng', '帝': 'dì', '号': 'hào', '皇': 'huáng',
-            '居': 'jū', '上': 'shàng', '唐': 'táng', '虞': 'yú', '揖': 'yī', '逊': 'xùn', '称': 'chēng', '盛': 'shèng', '世': 'shì', '禹': 'yǔ',
-            '商': 'shāng', '汤': 'tāng', '武': 'wǔ', '王': 'wáng', '称': 'chēng', '夏': 'xià', '传': 'chuán', '家': 'jiā', '天': 'tiān', '下': 'xià',
-            '四': 'sì', '百': 'bǎi', '载': 'zǎi', '迁': 'qiān', '社': 'shè', '伐': 'fá', '纣': 'zhòu', '诛': 'zhū', '最': 'zuì', '久': 'jiǔ',
-            '辙': 'zhé', '坠': 'zhuì', '逞': 'chěng', '干': 'gān', '戈': 'gē', '尚': 'shàng', '游': 'yóu', '战': 'zhàn', '霸': 'bà', '强': 'qiáng',
-            '雄': 'xióng', '出': 'chū', '嬴': 'yíng', '秦': 'qín', '氏': 'shì', '始': 'shǐ', '兼': 'jiān', '并': 'bìng', '二': 'èr', '楚': 'chǔ',
-            '汉': 'hàn', '争': 'zhēng', '高': 'gāo', '祖': 'zǔ', '兴': 'xīng', '业': 'yè', '建': 'jiàn', '孝': 'xiào', '平': 'píng', '王': 'wáng',
-            '莽': 'mǎng', '篡': 'cuàn', '光': 'guāng', '武': 'wǔ', '年': 'nián', '于': 'yú', '献': 'xiàn', '魏': 'wèi', '蜀': 'shǔ', '吴': 'wú',
-            '鼎': 'dǐng', '迄': 'qì', '两': 'liǎng', '晋': 'jìn', '宋': 'sòng', '齐': 'qí', '继': 'jì', '梁': 'liáng', '陈': 'chén', '承': 'chéng',
-            '朝': 'cháo', '都': 'dū', '金': 'jīn', '陵': 'líng', '北': 'běi', '元': 'yuán', '分': 'fēn', '东': 'dōng', '西': 'xī', '宇': 'yǔ',
-            '文': 'wén', '高': 'gāo', '齐': 'qí', '迨': 'dài', '隋': 'suí', '一': 'yī', '土': 'tǔ', '再': 'zài', '失': 'shī', '统': 'tǒng',
-            '绪': 'xù', '起': 'qǐ', '义': 'yì', '除': 'chú', '乱': 'luàn', '创': 'chuàng', '基': 'jī', '灭': 'miè', '改': 'gǎi', '代': 'dài',
-            '皆': 'jiē', '由': 'yóu', '炎': 'yán', '受': 'shòu', '禅': 'shàn', '混': 'hùn', '帝': 'dì', '纷': 'fēn', '犹': 'yóu', '歇': 'xiē',
-            '同': 'tóng', '戎': 'róng', '狄': 'dí', '祚': 'zuò', '废': 'fèi', '太': 'tài', '久': 'jiǔ', '祀': 'sì', '京': 'jīng', '永': 'yǒng',
-            '乐': 'lè', '嗣': 'sì', '崇': 'chóng', '祯': 'zhēn', '煤': 'méi', '逝': 'shì', '清': 'qīng', '膺': 'yīng', '景': 'jǐng', '靖': 'jìng',
-            '克': 'kè', '定': 'dìng', '录': 'lù', '实': 'shí', '古': 'gǔ', '今': 'jīn', '若': 'ruò', '目': 'mù', '口': 'kǒu', '诵': 'sòng',
-            '惟': 'wéi', '朝': 'zhāo', '斯': 'sī', '夕': 'xī', '昔': 'xī', '仲': 'zhòng', '尼': 'ní', '项': 'xiàng', '橐': 'tuó', '圣': 'shèng',
-            '贤': 'xián', '尚': 'shàng', '勤': 'qín', '赵': 'zhào', '令': 'lìng', '鲁': 'lǔ', '彼': 'bǐ', '仕': 'shì', '且': 'qiě', '披': 'pī',
-            '蒲': 'pú', '编': 'biān', '削': 'xiāo', '简': 'jiǎn', '无': 'wú', '勉': 'miǎn', '头': 'tóu', '悬': 'xuán', '锥': 'zhuī', '刺': 'cì',
-            '股': 'gǔ', '苦': 'kǔ', '囊': 'náng', '萤': 'yíng', '映': 'yìng', '雪': 'xuě', '虽': 'suī', '贫': 'pín', '辍': 'chuò', '负': 'fù',
-            '薪': 'xīn', '挂': 'guà', '角': 'jiǎo', '劳': 'láo', '卓': 'zhuó', '泉': 'quán', '发': 'fā', '愤': 'fèn', '籍': 'jí', '悔': 'huǐ',
-            '迟': 'chí', '尔': 'ěr', '早': 'zǎo', '灏': 'hào', '对': 'duì', '廷': 'tíng', '魁': 'kuí', '士': 'shì', '众': 'zhòng', '异': 'yì',
-            '立': 'lì', '志': 'zhì', '莹': 'yíng', '赋': 'fù', '棋': 'qí', '颖': 'yǐng', '悟': 'wù', '奇': 'qí', '效': 'xiào', '蔡': 'cài',
-            '姬': 'jī', '辨': 'biàn', '琴': 'qín', '谢': 'xiè', '韫': 'yùn', '吟': 'yín', '女': 'nǚ', '聪': 'cōng', '敏': 'mǐn', '警': 'jǐng',
-            '晏': 'yàn', '举': 'jǔ', '神': 'shén', '童': 'tóng', '正': 'zhèng', '已': 'yǐ', '致': 'zhì', '亦': 'yì', '是': 'shì', '守': 'shǒu',
-            '夜': 'yè', '司': 'sī', '晨': 'chén', '曷': 'hé', '蚕': 'cán', '吐': 'tǔ', '蜂': 'fēng', '酿': 'niàng', '蜜': 'mì', '物': 'wù',
-            '壮': 'zhuàng', '泽': 'zé', '民': 'mín', '声': 'shēng', '显': 'xiǎn', '前': 'qián', '裕': 'yù', '后': 'hòu', '遗': 'yí', '满': 'mǎn',
-            '赢': 'yíng', '功': 'gōng', '戏': 'xì', '益': 'yì', '戒': 'jiè', '哉': 'zāi', '力': 'lì'
+            '人':'rén','之':'zhī','初':'chū','性':'xìng','本':'běn','善':'shàn','相':'xiāng','近':'jìn','习':'xí','远':'yuǎn',
+            '苟':'gǒu','不':'bù','教':'jiào','乃':'nǎi','迁':'qiān','道':'dào','贵':'guì','以':'yǐ','专':'zhuān','昔':'xī',
+            '孟':'mèng','母':'mǔ','择':'zé','邻':'lín','处':'chǔ','子':'zǐ','学':'xué','断':'duàn','机':'jī','杼':'zhù',
+            '窦':'dòu','燕':'yān','山':'shān','有':'yǒu','义':'yì','方':'fāng','五':'wǔ','名':'míng','俱':'jù','扬':'yáng',
+            '养':'yǎng','父':'fù','过':'guò','严':'yán','师':'shī','惰':'duò','非':'fēi','所':'suǒ','宜':'yí','幼':'yòu',
+            '老':'lǎo','何':'hé','为':'wéi','玉':'yù','琢':'zhuó','成':'chéng','器':'qì','知':'zhī','作':'zuò','少':'shào',
+            '时':'shí','亲':'qīn','友':'yǒu','礼':'lǐ','仪':'yí','香':'xiāng','九':'jiǔ','龄':'líng','能':'néng','温':'wēn',
+            '席':'xí','孝':'xiào','于':'yú','当':'dāng','执':'zhí','融':'róng','四':'sì','岁':'suì','让':'ràng','梨':'lí',
+            '弟':'dì','长':'zhǎng','先':'xiān','首':'shǒu','悌':'tì','次':'cì','见':'jiàn','闻':'wén','某':'mǒu','数':'shù',
+            '识':'shí','文':'wén','一':'yī','而':'ér','十':'shí','百':'bǎi','千':'qiān','万':'wàn','三':'sān','才':'cái',
+            '者':'zhě','天':'tiān','地':'dì','光':'guāng','日':'rì','月':'yuè','星':'xīng','纲':'gāng','君':'jūn','臣':'chén',
+            '夫':'fū','妇':'fù','顺':'shùn','曰':'yuē','春':'chūn','夏':'xià','秋':'qiū','冬':'dōng','此':'cǐ','运':'yùn',
+            '穷':'qióng','南':'nán','北':'běi','西':'xī','东':'dōng','应':'yìng','乎':'hū','中':'zhōng','水':'shuǐ',
+            '火':'huǒ','木':'mù','金':'jīn','土':'tǔ','行':'xíng','仁':'rén','智':'zhì','信':'xìn','常':'cháng','容':'róng',
+            '紊':'wěn','稻':'dào','粱':'liáng','菽':'shū','麦':'mài','黍':'shǔ','稷':'jì','六':'liù','谷':'gǔ','食':'shí',
+            '马':'mǎ','牛':'niú','羊':'yáng','鸡':'jī','犬':'quǎn','豕':'shǐ','畜':'chù','饲':'sì','喜':'xǐ','怒':'nù',
+            '哀':'āi','惧':'jù','爱':'ài','恶':'wù','欲':'yù','七':'qī','情':'qíng','具':'jù','匏':'páo','革':'gé',
+            '石':'shí','丝':'sī','与':'yǔ','竹':'zhú','八':'bā','音':'yīn','高':'gāo','曾':'zēng','祖':'zǔ','身':'shēn',
+            '自':'zì','孙':'sūn','至':'zhì','玄':'xuán','族':'zú','伦':'lún','恩':'ēn','从':'cóng','兄':'xiōng','则':'zé',
+            '恭':'gōng','序':'xù','朋':'péng','敬':'jìng','忠':'zhōng','凡':'fán','训':'xùn','蒙':'méng','须':'xū','讲':'jiǎng',
+            '究':'jiū','详':'xiáng','诂':'gǔ','明':'míng','句':'jù','读':'dú','必':'bì','小':'xiǎo','终':'zhōng',
+            '书':'shū','论':'lún','语':'yǔ','篇':'piān','群':'qún','记':'jì','言':'yán','止':'zhǐ','德':'dé',
+            '说':'shuō','庸':'yōng','思':'sī','笔':'bǐ','偏':'piān','易':'yì','大':'dà','修':'xiū','齐':'qí','平':'píng',
+            '治':'zhì','经':'jīng','通':'tōng','熟':'shú','如':'rú','始':'shǐ','可':'kě','诗':'shī','号':'hào',
+            '求':'qiú','连':'lián','归':'guī','藏':'cáng','周':'zhōu','典':'diǎn','谟':'mó','诰':'gào',
+            '誓':'shì','命':'mìng','奥':'ào','我':'wǒ','公':'gōng','著':'zhù','官':'guān','存':'cún','体':'tǐ','戴':'dài',
+            '注':'zhù','述':'shù','圣':'shèng','乐':'yuè','备':'bèi','国':'guó','风':'fēng','雅':'yǎ','颂':'sòng','讽':'fěng',
+            '咏':'yǒng','既':'jì','亡':'wáng','寓':'yù','褒':'bāo','贬':'biǎn','别':'bié','传':'zhuàn','左':'zuǒ','氏':'shì',
+            '榖':'gǔ','撮':'cuō','要':'yào','事':'shì','荀':'xún','及':'jí','庄':'zhuāng','诸':'zhū',
+            '史':'shǐ','考':'kǎo','世':'shì','系':'xì','羲':'xī','农':'nóng','黄':'huáng','帝':'dì','皇':'huáng',
+            '居':'jū','上':'shàng','唐':'táng','虞':'yú','揖':'yī','逊':'xùn','称':'chēng','盛':'shèng','禹':'yǔ',
+            '商':'shāng','汤':'tāng','武':'wǔ','王':'wáng','传':'chuán','家':'jiā','下':'xià',
+            '载':'zǎi','社':'shè','伐':'fá','纣':'zhòu','诛':'zhū','最':'zuì','久':'jiǔ',
+            '辙':'zhé','坠':'zhuì','逞':'chěng','干':'gān','戈':'gē','尚':'shàng','游':'yóu','战':'zhàn',
+            '霸':'bà','强':'qiáng','雄':'xióng','出':'chū','嬴':'yíng','秦':'qín','兼':'jiān','并':'bìng',
+            '二':'èr','楚':'chǔ','汉':'hàn','争':'zhēng','兴':'xīng','业':'yè','建':'jiàn',
+            '平':'píng','王':'wáng','莽':'mǎng','篡':'cuàn','光':'guāng','武':'wǔ','年':'nián',
+            '献':'xiàn','魏':'wèi','蜀':'shǔ','吴':'wú','鼎':'dǐng','迄':'qì','两':'liǎng','晋':'jìn',
+            '宋':'sòng','齐':'qí','继':'jì','梁':'liáng','陈':'chén','承':'chéng','朝':'cháo','都':'dū',
+            '陵':'líng','元':'yuán','分':'fēn','宇':'yǔ','迨':'dài','隋':'suí','一':'yī','土':'tǔ',
+            '再':'zài','失':'shī','统':'tǒng','绪':'xù','起':'qǐ','除':'chú','乱':'luàn','创':'chuàng',
+            '基':'jī','灭':'miè','改':'gǎi','代':'dài','皆':'jiē','由':'yóu','炎':'yán','受':'shòu',
+            '禅':'shàn','混':'hùn','纷':'fēn','犹':'yóu','歇':'xiē','同':'tóng','戎':'róng','狄':'dí',
+            '祚':'zuò','废':'fèi','太':'tài','祀':'sì','京':'jīng','永':'yǒng','乐':'lè','嗣':'sì',
+            '崇':'chóng','祯':'zhēn','煤':'méi','逝':'shì','清':'qīng','膺':'yīng','景':'jǐng','靖':'jìng',
+            '克':'kè','定':'dìng','录':'lù','实':'shí','古':'gǔ','今':'jīn','若':'ruò','目':'mù','口':'kǒu',
+            '诵':'sòng','惟':'wéi','朝':'zhāo','斯':'sī','夕':'xī','仲':'zhòng','尼':'ní','项':'xiàng',
+            '橐':'tuó','贤':'xián','勤':'qín','赵':'zhào','令':'lìng','鲁':'lǔ','彼':'bǐ','仕':'shì',
+            '且':'qiě','披':'pī','蒲':'pú','编':'biān','削':'xiāo','简':'jiǎn','无':'wú','勉':'miǎn',
+            '头':'tóu','悬':'xuán','锥':'zhuī','刺':'cì','股':'gǔ','苦':'kǔ','囊':'náng','萤':'yíng',
+            '映':'yìng','雪':'xuě','虽':'suī','贫':'pín','辍':'chuò','负':'fù','薪':'xīn','挂':'guà',
+            '角':'jiǎo','劳':'láo','卓':'zhuó','泉':'quán','发':'fā','愤':'fèn','籍':'jí','悔':'huǐ',
+            '迟':'chí','尔':'ěr','早':'zǎo','灏':'hào','对':'duì','廷':'tíng','魁':'kuí','士':'shì',
+            '众':'zhòng','异':'yì','立':'lì','志':'zhì','莹':'yíng','赋':'fù','棋':'qí','颖':'yǐng',
+            '悟':'wù','奇':'qí','效':'xiào','蔡':'cài','姬':'jī','辨':'biàn','琴':'qín','谢':'xiè',
+            '韫':'yùn','吟':'yín','女':'nǚ','聪':'cōng','敏':'mǐn','警':'jǐng','晏':'yàn',
+            '举':'jǔ','神':'shén','童':'tóng','正':'zhèng','已':'yǐ','致':'zhì','亦':'yì','是':'shì',
+            '守':'shǒu','夜':'yè','司':'sī','晨':'chén','曷':'hé','蚕':'cán','吐':'tǔ','蜂':'fēng',
+            '酿':'niàng','蜜':'mì','物':'wù','壮':'zhuàng','泽':'zé','民':'mín','声':'shēng','显':'xiǎn',
+            '前':'qián','裕':'yù','后':'hòu','遗':'yí','满':'mǎn','赢':'yíng','功':'gōng','戏':'xì',
+            '益':'yì','戒':'jiè','哉':'zāi','力':'lì'
         };
 
-        let allChars = [];
-        let levels = [];
-        let currentLevel = 1;
-        let currentChars = [];
-        let currentIndex = 0;
-        let correctCount = 0;
-        let wrongCount = 0;
-        let wrongWords = [];
-        let totalStartTime = null;
-        let questionTimer = null;
-        let totalTimer = null;
-        let passedLevels = [];
-        let unlockedLevels = [1];
-        let currentStreak = 0;
-
-        // 吉祥物对话
-        const mascotMessages = {
-            start: ['加油！你可以的！💪', '准备好开始了吗？🎯', '今天也要认真学习哦！📚'],
-            correct: ['太棒了！🎉', '你真聪明！⭐', '继续加油！🔥', '答对了！👍'],
-            wrong: ['没关系，再试试！💪', '不要灰心！🌟', '下次一定能答对！🎯'],
-            streak: ['连对x题！太厉害了！🔥', '势不可挡！💪', '你是识字小达人！⭐'],
-            timeout: ['时间到了，下次要快点哦！⏰'],
-            passed: ['恭喜过关！🎉', '你太棒了！🏆', '继续挑战下一关吧！🚀']
-        };
-
-        function mascotSpeak(type = 'start', streak = 0) {
-            const mascot = document.getElementById('mascot');
-            const speech = document.getElementById('mascotSpeech');
-            let messages = mascotMessages[type];
-            let message = messages[Math.floor(Math.random() * messages.length)];
-            
-            if (type === 'streak' && streak > 0) {
-                message = message.replace('x', streak);
-            }
-            
-            speech.textContent = message;
-            speech.classList.add('show');
-            
-            if (type === 'correct' || type === 'streak' || type === 'passed') {
-                mascot.classList.add('happy');
-            } else if (type === 'wrong' || type === 'timeout') {
-                mascot.classList.add('sad');
-            }
-            
-            setTimeout(() => {
-                speech.classList.remove('show');
-                mascot.classList.remove('happy', 'sad');
-            }, 2000);
-        }
-
-        // 星星特效
-        function createStars(x, y) {
-            for (let i = 0; i < 5; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.textContent = '⭐';
-                star.style.left = x + 'px';
-                star.style.top = y + 'px';
-                const angle = (i / 5) * Math.PI * 2;
-                const distance = 100 + Math.random() * 50;
-                star.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
-                star.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
-                document.body.appendChild(star);
-                setTimeout(() => star.remove(), 1000);
-            }
-        }
-
-        // 显示连对
-        function showStreak(streak) {
-            const streakDisplay = document.getElementById('streakDisplay');
-            if (streak >= 3) {
-                streakDisplay.textContent = `🔥 连对 ${streak} 题！`;
-                streakDisplay.classList.add('show');
-                mascotSpeak('streak', streak);
-            } else {
-                streakDisplay.classList.remove('show');
-            }
-        }
+        const levelNames = ['入门','基础','进阶','提高','突破','挑战','精进','高手','大师','巅峰'];
+        let allChars = [], levels = [], currentLevel = 1, currentChars = [];
+        let currentIndex = 0, correctCount = 0, wrongCount = 0, wrongWords = [];
+        let totalStartTime = null, questionTimer = null, totalTimer = null;
+        let passedLevels = [], unlockedLevels = [1];
 
         function init() {
             const charSet = new Set();
-            const text = sanzijingText.replace(/\s+/g, '');
-            for (const char of text) {
-                if (char.trim()) charSet.add(char);
+            for (const c of sanzijingText.replace(/\s+/g, '')) {
+                if (c.trim()) charSet.add(c);
             }
-            allChars = Array.from(charSet).map(char => ({
-                char: char,
-                pinyin: pinyinData[char] || 'N/A',
-                strokes: 10
-            }));
-            
-            allChars.sort((a, b) => a.strokes - b.strokes);
-            const levelSize = Math.ceil(allChars.length / 10);
+            allChars = [...charSet].map(c => ({ char: c, pinyin: pinyinData[c] || '' }));
+            const n = Math.ceil(allChars.length / 10);
             levels = [];
-            for (let i = 0; i < 10; i++) {
-                const start = i * levelSize;
-                const end = Math.min(start + levelSize, allChars.length);
-                levels.push(allChars.slice(start, end));
-            }
-            
+            for (let i = 0; i < 10; i++) levels.push(allChars.slice(i*n, (i+1)*n));
             loadProgress();
-            renderNavPage();
+            renderNav();
         }
 
-        function saveProgress() {
-            const data = { passedLevels, unlockedLevels };
-            localStorage.setItem('sanzijing_progress', JSON.stringify(data));
-        }
-
+        function save() { localStorage.setItem('szj', JSON.stringify({passedLevels, unlockedLevels})); }
         function loadProgress() {
             try {
-                const data = localStorage.getItem('sanzijing_progress');
-                if (data) {
-                    const parsed = JSON.parse(data);
-                    passedLevels = parsed.passedLevels || [];
-                    unlockedLevels = parsed.unlockedLevels || [1];
-                }
-            } catch (e) {
-                console.error('加载进度失败', e);
-            }
+                const d = JSON.parse(localStorage.getItem('szj') || '{}');
+                passedLevels = d.passedLevels || [];
+                unlockedLevels = d.unlockedLevels || [1];
+            } catch(e) {}
         }
-
         function resetProgress() {
-            if (confirm('确定要重新开始吗？')) {
-                passedLevels = [];
-                unlockedLevels = [1];
-                currentStreak = 0;
-                saveProgress();
-                renderNavPage();
+            if (confirm('确定重新开始？所有进度将清空。')) {
+                passedLevels = []; unlockedLevels = [1]; save(); renderNav();
             }
         }
 
-        function renderNavPage() {
+        function renderNav() {
             document.getElementById('passedCount').textContent = passedLevels.length;
-            const grid = document.getElementById('levelsGrid');
-            grid.innerHTML = '';
-            
-            const colors = ['#FF9AA2', '#FFB7B2', '#FFDAC1', '#E2F0CB', '#B5EAD7', '#C7CEEA', '#F8B195', '#F67280', '#C06C84', '#6C5B7B'];
-            
+            const g = document.getElementById('levelsGrid');
+            g.innerHTML = '';
             for (let i = 1; i <= 10; i++) {
-                const isUnlocked = unlockedLevels.includes(i);
-                const isPassed = passedLevels.includes(i);
-                const isCurrent = isUnlocked && !isPassed;
-                
+                const unlocked = unlockedLevels.includes(i);
+                const passed = passedLevels.includes(i);
+                const isCurrent = unlocked && !passed;
                 const card = document.createElement('div');
-                card.className = 'level-card' + (isUnlocked ? '' : ' locked') + (isPassed ? ' passed' : '') + (isCurrent ? ' current' : '');
-                card.style.background = isPassed ? '' : (isUnlocked ? colors[i-1] : '');
-                
-                let stars = '';
-                if (isPassed) {
-                    stars = '<div class="level-stars">⭐⭐⭐</div>';
-                }
-                
+                card.className = 'level-card' + (passed ? ' passed' : (unlocked ? (isCurrent ? ' current' : ' unlocked') : ' locked'));
                 card.innerHTML = `
-                    <div class="level-number">${i}</div>
-                    <div class="level-status">${isPassed ? '✅' : (isUnlocked ? '🔓' : '🔒')}</div>
-                    ${stars}
+                    ${passed ? '<div class="level-check">✓</div>' : ''}
+                    <div class="level-num">${i}</div>
+                    <div class="level-name">${levelNames[i-1]}</div>
+                    <div class="level-char-count">${levels[i-1].length} 字</div>
+                    ${!unlocked ? '<div class="level-lock">未解锁</div>' : ''}
                 `;
-                
-                if (isUnlocked) {
-                    card.onclick = () => {
-                        mascotSpeak('start');
-                        startTest(i);
-                    };
-                }
-                
-                grid.appendChild(card);
+                if (unlocked) card.onclick = () => startTest(i);
+                g.appendChild(card);
             }
         }
 
         function startTest(level) {
             currentLevel = level;
-            currentChars = [...levels[level - 1]];
-            shuffleArray(currentChars);
-            currentIndex = 0;
-            correctCount = 0;
-            wrongCount = 0;
-            wrongWords = [];
-            currentStreak = 0;
-            showStreak(0);
-            
+            currentChars = shuffle([...levels[level-1]]);
+            currentIndex = 0; correctCount = 0; wrongCount = 0; wrongWords = [];
             showPage('test');
             totalStartTime = Date.now();
-            updateTotalTimer();
-            totalTimer = setInterval(updateTotalTimer, 1000);
+            totalTimer = setInterval(tickTotal, 1000);
             showQuestion();
         }
 
         function showQuestion() {
-            if (currentIndex >= currentChars.length || wrongCount > 2) {
-                endTest();
-                return;
-            }
-            
-            const current = currentChars[currentIndex];
-            const charEl = document.getElementById('currentChar');
-            charEl.textContent = current.char;
-            charEl.classList.add('pop');
-            setTimeout(() => charEl.classList.remove('pop'), 400);
-            
+            if (currentIndex >= currentChars.length || wrongCount > 2) { endTest(); return; }
+            const cur = currentChars[currentIndex];
+            document.getElementById('currentChar').textContent = cur.char;
             document.getElementById('currentLevel').textContent = currentLevel;
+            document.getElementById('currentQuestion').textContent = `${currentIndex+1} / ${currentChars.length}`;
             document.getElementById('correctCount').textContent = correctCount;
             document.getElementById('wrongCount').textContent = wrongCount;
-            document.getElementById('currentQuestion').textContent = currentIndex + 1;
-            document.getElementById('totalQuestions').textContent = currentChars.length;
-            document.getElementById('feedbackArea').innerHTML = '';
-            
-            generateOptions(current);
-            startQuestionTimer();
+            document.getElementById('feedback').textContent = '';
+            document.getElementById('feedback').className = 'feedback';
+            buildOptions(cur);
+            startQTimer();
         }
 
-        function generateOptions(current) {
-            const correctPinyin = current.pinyin;
-            const options = [correctPinyin];
-            
-            const allPinyins = Object.values(pinyinData);
-            while (options.length < 4) {
-                const randomPinyin = allPinyins[Math.floor(Math.random() * allPinyins.length)];
-                if (!options.includes(randomPinyin)) options.push(randomPinyin);
+        function buildOptions(cur) {
+            const correct = cur.pinyin;
+            const opts = [correct];
+            const all = [...new Set(Object.values(pinyinData))];
+            while (opts.length < 4) {
+                const r = all[Math.floor(Math.random()*all.length)];
+                if (!opts.includes(r)) opts.push(r);
             }
-            shuffleArray(options);
-            
-            const container = document.getElementById('optionsContainer');
-            container.innerHTML = '';
-            const labels = ['A', 'B', 'C', 'D', 'E'];
-            const optionTexts = [...options.slice(0, 4), '不认识'];
-            
-            optionTexts.forEach((opt, index) => {
+            shuffle(opts);
+            const row1 = document.getElementById('optionsRow1');
+            const row2 = document.getElementById('optionsRow2');
+            row1.innerHTML = ''; row2.innerHTML = '';
+            const labels = ['A','B','C','D'];
+            opts.forEach((o,i) => {
                 const btn = document.createElement('button');
-                btn.className = 'option-btn' + (index === 4 ? ' option-e' : '');
-                btn.innerHTML = `<span class="option-label">${labels[index]}</span>${opt}`;
-                btn.onclick = (e) => checkAnswer(opt === '不认识' ? 'UNKNOWN' : opt, correctPinyin, current.char, btn, e);
-                container.appendChild(btn);
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span class="label">${labels[i]}</span><span class="text">${o}</span>`;
+                btn.onclick = () => answer(o, correct, cur.char, btn);
+                row1.appendChild(btn);
             });
+            const btnE = document.createElement('button');
+            btnE.className = 'option-btn opt-e';
+            btnE.innerHTML = '<span class="label">E</span><span class="text">不认识</span>';
+            btnE.onclick = () => answer('SKIP', correct, cur.char, btnE);
+            row2.appendChild(btnE);
         }
 
-        function checkAnswer(selected, correct, char, btn, event) {
-            stopQuestionTimer();
-            const buttons = document.querySelectorAll('.option-btn');
-            buttons.forEach(b => b.classList.add('disabled'));
-            
-            const feedbackArea = document.getElementById('feedbackArea');
-            if (selected === correct) {
+        function answer(sel, correct, char, btn) {
+            stopQTimer();
+            document.querySelectorAll('.option-btn').forEach(b => b.classList.add('disabled'));
+            const fb = document.getElementById('feedback');
+            if (sel === correct) {
                 correctCount++;
-                currentStreak++;
                 btn.classList.add('correct');
-                feedbackArea.innerHTML = '<span style="color:var(--success);font-weight:bold;font-size:1.3em;">✓ 正确！</span>';
-                
-                // 星星特效
-                if (event) {
-                    createStars(event.clientX, event.clientY);
-                }
-                
-                // 吉祥物反馈
-                if (currentStreak >= 3) {
-                    showStreak(currentStreak);
-                } else {
-                    mascotSpeak('correct');
-                }
-                
-                setTimeout(() => {
-                    currentIndex++;
-                    showQuestion();
-                }, 800);
+                fb.textContent = '正确';
+                fb.className = 'feedback correct';
+                setTimeout(next, 600);
             } else {
                 wrongCount++;
-                currentStreak = 0;
-                showStreak(0);
                 btn.classList.add('wrong');
-                wrongWords.push({ char, pinyin: correct });
-                feedbackArea.innerHTML = `<span style="color:var(--error);font-weight:bold;font-size:1.3em;">✗ 错了！${char}(${correct})</span>`;
-                mascotSpeak('wrong');
-                
-                if (wrongCount > 2) {
-                    setTimeout(() => endTest(), 1500);
-                } else {
-                    setTimeout(() => {
-                        currentIndex++;
-                        showQuestion();
-                    }, 1500);
-                }
+                wrongWords.push({char, pinyin: correct});
+                fb.textContent = sel === 'SKIP' ? `答案是 ${char}（${correct}）` : `错误，${char}（${correct}）`;
+                fb.className = 'feedback wrong';
+                setTimeout(wrongCount > 2 ? endTest : next, 1500);
             }
-            
             document.getElementById('correctCount').textContent = correctCount;
             document.getElementById('wrongCount').textContent = wrongCount;
         }
 
-        function updateTotalTimer() {
-            const elapsed = Math.floor((Date.now() - totalStartTime) / 1000);
-            const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
-            const seconds = (elapsed % 60).toString().padStart(2, '0');
-            document.getElementById('totalTimer').textContent = `${minutes}:${seconds}`;
+        function next() { currentIndex++; showQuestion(); }
+
+        function tickTotal() {
+            const s = Math.floor((Date.now()-totalStartTime)/1000);
+            document.getElementById('totalTimer').textContent =
+                `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
         }
 
-        function startQuestionTimer() {
-            let remaining = 15;
-            document.getElementById('questionTimer').textContent = remaining;
-            document.getElementById('timerText').textContent = remaining;
+        function startQTimer() {
+            let rem = 15;
             const fill = document.getElementById('timerBarFill');
             fill.style.width = '100%';
-            
-            questionStartTime = Date.now();
+            fill.className = 'timer-bar-fill';
+            const start = Date.now();
             questionTimer = setInterval(() => {
-                const elapsed = Math.floor((Date.now() - questionStartTime) / 1000);
-                remaining = Math.max(0, 15 - elapsed);
-                document.getElementById('questionTimer').textContent = remaining;
-                document.getElementById('timerText').textContent = remaining;
-                const percent = (remaining / 15) * 100;
-                fill.style.width = percent + '%';
-                
-                if (remaining <= 0) {
-                    stopQuestionTimer();
-                    handleTimeout();
-                }
-            }, 100);
+                rem = Math.max(0, 15 - Math.floor((Date.now()-start)/1000));
+                fill.style.width = (rem/15*100)+'%';
+                fill.className = 'timer-bar-fill' + (rem <= 5 ? ' danger' : rem <= 10 ? ' warning' : '');
+                if (rem <= 0) { stopQTimer(); timeout(); }
+            }, 200);
         }
+        function stopQTimer() { clearInterval(questionTimer); }
 
-        function stopQuestionTimer() {
-            if (questionTimer) {
-                clearInterval(questionTimer);
-                questionTimer = null;
-            }
-        }
-
-        function handleTimeout() {
-            const current = currentChars[currentIndex];
+        function timeout() {
+            const cur = currentChars[currentIndex];
             wrongCount++;
-            currentStreak = 0;
-            showStreak(0);
-            wrongWords.push({ char: current.char, pinyin: current.pinyin });
-            document.getElementById('feedbackArea').innerHTML = 
-                `<span style="color:var(--error);font-weight:bold;font-size:1.3em;">⏰ 超时！${current.char}(${current.pinyin})</span>`;
-            mascotSpeak('timeout');
+            wrongWords.push({char: cur.char, pinyin: cur.pinyin});
             document.getElementById('wrongCount').textContent = wrongCount;
-            
-            setTimeout(() => {
-                if (wrongCount > 2) endTest();
-                else {
-                    currentIndex++;
-                    showQuestion();
-                }
-            }, 1500);
+            document.querySelectorAll('.option-btn').forEach(b => b.classList.add('disabled'));
+            const fb = document.getElementById('feedback');
+            fb.textContent = `时间到，${cur.char}（${cur.pinyin}）`;
+            fb.className = 'feedback wrong';
+            setTimeout(wrongCount > 2 ? endTest : next, 1500);
         }
 
         function endTest() {
-            stopQuestionTimer();
-            if (totalTimer) clearInterval(totalTimer);
-            
-            const elapsed = Math.floor((Date.now() - totalStartTime) / 1000);
-            const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
-            const seconds = (elapsed % 60).toString().padStart(2, '0');
-            
+            stopQTimer();
+            clearInterval(totalTimer);
+            const s = Math.floor((Date.now()-totalStartTime)/1000);
+            const time = `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
             const passed = wrongCount <= 2;
             if (passed && !passedLevels.includes(currentLevel)) {
                 passedLevels.push(currentLevel);
-                if (currentLevel < 10 && !unlockedLevels.includes(currentLevel + 1)) {
-                    unlockedLevels.push(currentLevel + 1);
-                }
-                saveProgress();
+                if (currentLevel < 10 && !unlockedLevels.includes(currentLevel+1)) unlockedLevels.push(currentLevel+1);
+                save();
             }
-            
             showPage('result');
             document.getElementById('resultCorrect').textContent = correctCount;
             document.getElementById('resultWrong').textContent = wrongCount;
-            document.getElementById('resultTime').textContent = `${minutes}:${seconds}`;
-            
-            const resultIcon = document.getElementById('resultIcon');
-            const resultTitle = document.getElementById('resultTitle');
-            const nextLevelBtn = document.getElementById('nextLevelBtn');
-            
-            if (passed) {
-                resultIcon.textContent = '🎉';
-                resultTitle.textContent = currentLevel === 10 ? '🏆 通关！' : '🎉 过关！';
-                nextLevelBtn.style.display = currentLevel < 10 ? 'inline-block' : 'none';
-                mascotSpeak('passed');
-            } else {
-                resultIcon.textContent = '😢';
-                resultTitle.textContent = '再接再厉！';
-                nextLevelBtn.style.display = 'none';
-            }
-            
-            const wrongWordsArea = document.getElementById('wrongWordsArea');
-            const wrongWordsList = document.getElementById('wrongWordsList');
-            if (wrongWords.length > 0) {
-                wrongWordsArea.classList.remove('hidden');
-                wrongWordsList.innerHTML = wrongWords.map(w => 
-                    `<span class="wrong-word-item">${w.char}<span style="color:var(--primary)">(${w.pinyin})</span></span>`
-                ).join('');
-            } else {
-                wrongWordsArea.classList.add('hidden');
-            }
+            document.getElementById('resultTime').textContent = time;
+            document.getElementById('resultIcon').textContent = passed ? (currentLevel===10?'🏆':'🎉') : '😊';
+            document.getElementById('resultTitle').textContent = passed ? (currentLevel===10?'全部通关！':'恭喜过关！') : '再接再厉';
+            document.getElementById('nextLevelBtn').style.display = (passed && currentLevel < 10) ? '' : 'none';
+            const wa = document.getElementById('wrongWordsArea');
+            const wl = document.getElementById('wrongWordsList');
+            if (wrongWords.length) {
+                wa.classList.remove('hidden');
+                wl.innerHTML = wrongWords.map(w => `<span class="wrong-item">${w.char}<span class="pinyin">${w.pinyin}</span></span>`).join('');
+            } else wa.classList.add('hidden');
         }
 
-        function goToNextLevel() {
-            if (currentLevel < 10) startTest(currentLevel + 1);
-            else goToNav();
+        function goToNextLevel() { if (currentLevel < 10) startTest(currentLevel+1); else goToNav(); }
+        function goToNav() { showPage('nav'); renderNav(); }
+        function exitTest() { if (confirm('确定退出？')) { stopQTimer(); clearInterval(totalTimer); goToNav(); } }
+
+        function showPage(p) {
+            document.getElementById('navPage').style.display = p==='nav'?'block':'none';
+            document.getElementById('testPage').style.display = p==='test'?'flex':'none';
+            document.getElementById('resultPage').style.display = p==='result'?'block':'none';
         }
 
-        function goToNav() {
-            currentStreak = 0;
-            showStreak(0);
-            showPage('nav');
-            renderNavPage();
-        }
-
-        function exitTest() {
-            if (confirm('确定退出测试吗？')) {
-                stopQuestionTimer();
-                if (totalTimer) clearInterval(totalTimer);
-                currentStreak = 0;
-                showStreak(0);
-                goToNav();
-            }
-        }
-
-        function showPage(page) {
-            document.getElementById('navPage').style.display = page === 'nav' ? 'block' : 'none';
-            document.getElementById('testPage').style.display = page === 'test' ? 'flex' : 'none';
-            document.getElementById('resultPage').style.display = page === 'result' ? 'block' : 'none';
-        }
-
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-        }
+        function shuffle(a) { for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
 
         document.addEventListener('DOMContentLoaded', init);
     </script>
