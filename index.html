@@ -39,6 +39,81 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
+            position: relative;
+        }
+        
+        /* 吉祥物 */
+        .mascot {
+            position: fixed;
+            right: 30px;
+            top: 30px;
+            font-size: 4em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            animation: mascotFloat 2s ease-in-out infinite;
+        }
+        
+        .mascot:hover {
+            transform: scale(1.1);
+        }
+        
+        .mascot.happy {
+            animation: mascotHappy 0.5s ease;
+        }
+        
+        .mascot.sad {
+            animation: mascotSad 0.5s ease;
+        }
+        
+        @keyframes mascotFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes mascotHappy {
+            0% { transform: scale(1) rotate(0); }
+            25% { transform: scale(1.2) rotate(-10deg); }
+            50% { transform: scale(1.2) rotate(10deg); }
+            75% { transform: scale(1.2) rotate(-5deg); }
+            100% { transform: scale(1) rotate(0); }
+        }
+        
+        @keyframes mascotSad {
+            0% { transform: translateY(0); }
+            25% { transform: translateY(5px); }
+            50% { transform: translateY(0); }
+            75% { transform: translateY(3px); }
+            100% { transform: translateY(0); }
+        }
+        
+        .mascot-speech {
+            position: fixed;
+            right: 100px;
+            top: 20px;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px var(--shadow);
+            font-size: 0.9em;
+            max-width: 200px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+        
+        .mascot-speech.show {
+            opacity: 1;
+        }
+        
+        .mascot-speech::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 10px solid transparent;
+            border-left-color: white;
         }
         
         /* 头部样式 */
@@ -95,11 +170,13 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            border: 3px solid transparent;
         }
         
         .level-card:hover:not(.locked) {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px var(--shadow);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 8px 20px var(--shadow);
+            border-color: var(--primary);
         }
         
         .level-card.locked {
@@ -111,6 +188,22 @@
         .level-card.passed {
             background: linear-gradient(135deg, var(--success), #C8E6C9);
             color: white;
+            animation: passedGlow 2s ease-in-out infinite;
+        }
+        
+        .level-card.current {
+            border-color: var(--primary);
+            animation: currentPulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes passedGlow {
+            0%, 100% { box-shadow: 0 0 5px var(--success); }
+            50% { box-shadow: 0 0 20px var(--success), 0 0 30px var(--success); }
+        }
+        
+        @keyframes currentPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
         
         .level-number {
@@ -121,6 +214,41 @@
         
         .level-status {
             font-size: 1.5em;
+        }
+        
+        .level-stars {
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        
+        /* 连对显示 */
+        .streak-display {
+            position: fixed;
+            left: 30px;
+            top: 30px;
+            background: linear-gradient(135deg, #FF5722, #FF9800);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1.2em;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(255,87,34,0.4);
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .streak-display.show {
+            opacity: 1;
+            transform: scale(1);
+            animation: streakBounce 0.5s ease;
+        }
+        
+        @keyframes streakBounce {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
         }
         
         /* 测试页 */
@@ -154,24 +282,36 @@
         .char-display {
             background: var(--card-bg);
             border-radius: 20px;
-            padding: 30px 20px;
+            padding: 25px 20px;
             text-align: center;
-            margin: 15px 0;
+            margin: 10px 0;
             box-shadow: 0 4px 15px var(--shadow);
             flex-shrink: 0;
+            position: relative;
         }
         
         .current-char {
-            font-size: 6rem;
+            font-size: 5rem;
             font-weight: bold;
             color: var(--text-dark);
             line-height: 1;
+            transition: all 0.3s ease;
+        }
+        
+        .current-char.pop {
+            animation: charPop 0.4s ease;
+        }
+        
+        @keyframes charPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
         }
         
         .question-timer {
             background: var(--card-bg);
             border-radius: 15px;
-            padding: 12px 20px;
+            padding: 10px 20px;
             margin-bottom: 10px;
             box-shadow: 0 2px 8px var(--shadow);
             flex-shrink: 0;
@@ -180,7 +320,7 @@
         .timer-bar {
             background: #E0E0E0;
             border-radius: 10px;
-            height: 20px;
+            height: 18px;
             overflow: hidden;
             margin-top: 8px;
             position: relative;
@@ -203,7 +343,7 @@
             font-size: 0.9em;
         }
         
-        /* 选项布局 - 一行五列压缩版 */
+        /* 选项布局 */
         .options-container {
             display: flex;
             gap: 10px;
@@ -220,7 +360,7 @@
             padding: 12px 8px;
             font-size: 1.2em;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             box-shadow: 0 3px 8px var(--shadow);
             text-align: center;
             min-width: 90px;
@@ -231,24 +371,45 @@
             position: relative;
         }
         
-        .option-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px var(--shadow);
+        .option-btn:hover:not(.disabled) {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+        
+        .option-btn:active:not(.disabled) {
+            transform: translateY(-1px) scale(0.98);
         }
         
         .option-btn.correct {
             background: linear-gradient(135deg, var(--success), #AED581);
             color: white;
+            animation: correctBounce 0.5s ease;
         }
         
         .option-btn.wrong {
             background: linear-gradient(135deg, var(--error), #EF5350);
             color: white;
+            animation: wrongShake 0.5s ease;
         }
         
         .option-btn.disabled {
             pointer-events: none;
             opacity: 0.8;
+        }
+        
+        @keyframes correctBounce {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.2); }
+            50% { transform: scale(1.1); }
+            75% { transform: scale(1.15); }
+        }
+        
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-10px); }
+            40% { transform: translateX(10px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
         }
         
         .option-label {
@@ -261,6 +422,26 @@
         
         .option-e {
             min-width: 120px;
+        }
+        
+        /* 星星特效 */
+        .star {
+            position: fixed;
+            font-size: 2em;
+            pointer-events: none;
+            animation: starFly 1s ease-out forwards;
+            z-index: 2000;
+        }
+        
+        @keyframes starFly {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1) rotate(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) scale(0) rotate(720deg);
+            }
         }
         
         /* 统计区域 */
@@ -290,6 +471,22 @@
             font-size: 0.9em;
             color: var(--text-dark);
             opacity: 0.8;
+        }
+        
+        /* 反馈区域 */
+        .feedback-area {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 10px 15px;
+            margin: 10px 0;
+            text-align: center;
+            font-size: 1.2em;
+            min-height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px var(--shadow);
+            flex-shrink: 0;
         }
         
         /* 结果页 */
@@ -386,22 +583,6 @@
             font-size: 1em;
         }
         
-        /* 反馈区域 */
-        .feedback-area {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 12px 15px;
-            margin: 10px 0;
-            text-align: center;
-            font-size: 1.2em;
-            min-height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 8px var(--shadow);
-            flex-shrink: 0;
-        }
-        
         .hidden {
             display: none !important;
         }
@@ -410,6 +591,11 @@
         @media (max-width: 1200px) {
             .levels-grid {
                 grid-template-columns: repeat(4, 1fr);
+            }
+            .mascot {
+                font-size: 3em;
+                right: 20px;
+                top: 20px;
             }
         }
         
@@ -425,6 +611,12 @@
             .current-char {
                 font-size: 4rem;
             }
+            .streak-display {
+                left: 20px;
+                top: 20px;
+                font-size: 1em;
+                padding: 8px 15px;
+            }
         }
         
         @media (max-width: 600px) {
@@ -434,10 +626,20 @@
             .container {
                 padding: 10px;
             }
+            .mascot {
+                font-size: 2.5em;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- 吉祥物 -->
+    <div class="mascot" id="mascot" onclick="mascotSpeak()">🐰</div>
+    <div class="mascot-speech" id="mascotSpeech">加油！你可以的！</div>
+    
+    <!-- 连对显示 -->
+    <div class="streak-display" id="streakDisplay">🔥 连对 3 题！</div>
+    
     <div class="container">
         <!-- 导航页 -->
         <div id="navPage" class="nav-page">
@@ -609,6 +811,71 @@
         let totalTimer = null;
         let passedLevels = [];
         let unlockedLevels = [1];
+        let currentStreak = 0;
+
+        // 吉祥物对话
+        const mascotMessages = {
+            start: ['加油！你可以的！💪', '准备好开始了吗？🎯', '今天也要认真学习哦！📚'],
+            correct: ['太棒了！🎉', '你真聪明！⭐', '继续加油！🔥', '答对了！👍'],
+            wrong: ['没关系，再试试！💪', '不要灰心！🌟', '下次一定能答对！🎯'],
+            streak: ['连对x题！太厉害了！🔥', '势不可挡！💪', '你是识字小达人！⭐'],
+            timeout: ['时间到了，下次要快点哦！⏰'],
+            passed: ['恭喜过关！🎉', '你太棒了！🏆', '继续挑战下一关吧！🚀']
+        };
+
+        function mascotSpeak(type = 'start', streak = 0) {
+            const mascot = document.getElementById('mascot');
+            const speech = document.getElementById('mascotSpeech');
+            let messages = mascotMessages[type];
+            let message = messages[Math.floor(Math.random() * messages.length)];
+            
+            if (type === 'streak' && streak > 0) {
+                message = message.replace('x', streak);
+            }
+            
+            speech.textContent = message;
+            speech.classList.add('show');
+            
+            if (type === 'correct' || type === 'streak' || type === 'passed') {
+                mascot.classList.add('happy');
+            } else if (type === 'wrong' || type === 'timeout') {
+                mascot.classList.add('sad');
+            }
+            
+            setTimeout(() => {
+                speech.classList.remove('show');
+                mascot.classList.remove('happy', 'sad');
+            }, 2000);
+        }
+
+        // 星星特效
+        function createStars(x, y) {
+            for (let i = 0; i < 5; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.textContent = '⭐';
+                star.style.left = x + 'px';
+                star.style.top = y + 'px';
+                const angle = (i / 5) * Math.PI * 2;
+                const distance = 100 + Math.random() * 50;
+                star.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
+                star.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
+                document.body.appendChild(star);
+                setTimeout(() => star.remove(), 1000);
+            }
+        }
+
+        // 显示连对
+        function showStreak(streak) {
+            const streakDisplay = document.getElementById('streakDisplay');
+            if (streak >= 3) {
+                streakDisplay.textContent = `🔥 连对 ${streak} 题！`;
+                streakDisplay.classList.add('show');
+                mascotSpeak('streak', streak);
+            } else {
+                streakDisplay.classList.remove('show');
+            }
+        }
 
         function init() {
             const charSet = new Set();
@@ -657,6 +924,7 @@
             if (confirm('确定要重新开始吗？')) {
                 passedLevels = [];
                 unlockedLevels = [1];
+                currentStreak = 0;
                 saveProgress();
                 renderNavPage();
             }
@@ -667,19 +935,33 @@
             const grid = document.getElementById('levelsGrid');
             grid.innerHTML = '';
             
+            const colors = ['#FF9AA2', '#FFB7B2', '#FFDAC1', '#E2F0CB', '#B5EAD7', '#C7CEEA', '#F8B195', '#F67280', '#C06C84', '#6C5B7B'];
+            
             for (let i = 1; i <= 10; i++) {
                 const isUnlocked = unlockedLevels.includes(i);
                 const isPassed = passedLevels.includes(i);
+                const isCurrent = isUnlocked && !isPassed;
                 
                 const card = document.createElement('div');
-                card.className = 'level-card' + (isUnlocked ? '' : ' locked') + (isPassed ? ' passed' : '');
+                card.className = 'level-card' + (isUnlocked ? '' : ' locked') + (isPassed ? ' passed' : '') + (isCurrent ? ' current' : '');
+                card.style.background = isPassed ? '' : (isUnlocked ? colors[i-1] : '');
+                
+                let stars = '';
+                if (isPassed) {
+                    stars = '<div class="level-stars">⭐⭐⭐</div>';
+                }
+                
                 card.innerHTML = `
                     <div class="level-number">${i}</div>
                     <div class="level-status">${isPassed ? '✅' : (isUnlocked ? '🔓' : '🔒')}</div>
+                    ${stars}
                 `;
                 
                 if (isUnlocked) {
-                    card.onclick = () => startTest(i);
+                    card.onclick = () => {
+                        mascotSpeak('start');
+                        startTest(i);
+                    };
                 }
                 
                 grid.appendChild(card);
@@ -694,6 +976,8 @@
             correctCount = 0;
             wrongCount = 0;
             wrongWords = [];
+            currentStreak = 0;
+            showStreak(0);
             
             showPage('test');
             totalStartTime = Date.now();
@@ -709,7 +993,11 @@
             }
             
             const current = currentChars[currentIndex];
-            document.getElementById('currentChar').textContent = current.char;
+            const charEl = document.getElementById('currentChar');
+            charEl.textContent = current.char;
+            charEl.classList.add('pop');
+            setTimeout(() => charEl.classList.remove('pop'), 400);
+            
             document.getElementById('currentLevel').textContent = currentLevel;
             document.getElementById('correctCount').textContent = correctCount;
             document.getElementById('wrongCount').textContent = wrongCount;
@@ -741,12 +1029,12 @@
                 const btn = document.createElement('button');
                 btn.className = 'option-btn' + (index === 4 ? ' option-e' : '');
                 btn.innerHTML = `<span class="option-label">${labels[index]}</span>${opt}`;
-                btn.onclick = () => checkAnswer(opt === '不认识' ? 'UNKNOWN' : opt, correctPinyin, current.char, btn);
+                btn.onclick = (e) => checkAnswer(opt === '不认识' ? 'UNKNOWN' : opt, correctPinyin, current.char, btn, e);
                 container.appendChild(btn);
             });
         }
 
-        function checkAnswer(selected, correct, char, btn) {
+        function checkAnswer(selected, correct, char, btn, event) {
             stopQuestionTimer();
             const buttons = document.querySelectorAll('.option-btn');
             buttons.forEach(b => b.classList.add('disabled'));
@@ -754,17 +1042,34 @@
             const feedbackArea = document.getElementById('feedbackArea');
             if (selected === correct) {
                 correctCount++;
+                currentStreak++;
                 btn.classList.add('correct');
-                feedbackArea.innerHTML = '<span style="color:var(--success)">✓ 正确！</span>';
+                feedbackArea.innerHTML = '<span style="color:var(--success);font-weight:bold;font-size:1.3em;">✓ 正确！</span>';
+                
+                // 星星特效
+                if (event) {
+                    createStars(event.clientX, event.clientY);
+                }
+                
+                // 吉祥物反馈
+                if (currentStreak >= 3) {
+                    showStreak(currentStreak);
+                } else {
+                    mascotSpeak('correct');
+                }
+                
                 setTimeout(() => {
                     currentIndex++;
                     showQuestion();
                 }, 800);
             } else {
                 wrongCount++;
+                currentStreak = 0;
+                showStreak(0);
                 btn.classList.add('wrong');
                 wrongWords.push({ char, pinyin: correct });
-                feedbackArea.innerHTML = `<span style="color:var(--error)">✗ 错了！${char}(${correct})</span>`;
+                feedbackArea.innerHTML = `<span style="color:var(--error);font-weight:bold;font-size:1.3em;">✗ 错了！${char}(${correct})</span>`;
+                mascotSpeak('wrong');
                 
                 if (wrongCount > 2) {
                     setTimeout(() => endTest(), 1500);
@@ -820,9 +1125,12 @@
         function handleTimeout() {
             const current = currentChars[currentIndex];
             wrongCount++;
+            currentStreak = 0;
+            showStreak(0);
             wrongWords.push({ char: current.char, pinyin: current.pinyin });
             document.getElementById('feedbackArea').innerHTML = 
-                `<span style="color:var(--error)">⏰ 超时！${current.char}(${current.pinyin})</span>`;
+                `<span style="color:var(--error);font-weight:bold;font-size:1.3em;">⏰ 超时！${current.char}(${current.pinyin})</span>`;
+            mascotSpeak('timeout');
             document.getElementById('wrongCount').textContent = wrongCount;
             
             setTimeout(() => {
@@ -864,6 +1172,7 @@
                 resultIcon.textContent = '🎉';
                 resultTitle.textContent = currentLevel === 10 ? '🏆 通关！' : '🎉 过关！';
                 nextLevelBtn.style.display = currentLevel < 10 ? 'inline-block' : 'none';
+                mascotSpeak('passed');
             } else {
                 resultIcon.textContent = '😢';
                 resultTitle.textContent = '再接再厉！';
@@ -888,6 +1197,8 @@
         }
 
         function goToNav() {
+            currentStreak = 0;
+            showStreak(0);
             showPage('nav');
             renderNavPage();
         }
@@ -896,6 +1207,8 @@
             if (confirm('确定退出测试吗？')) {
                 stopQuestionTimer();
                 if (totalTimer) clearInterval(totalTimer);
+                currentStreak = 0;
+                showStreak(0);
                 goToNav();
             }
         }
